@@ -25,8 +25,12 @@ function _makeGrid () {
 /**
  * Constructs a Board with a starting grid set up.
  */
-function Board () {
-  this.grid = _makeGrid();
+function Board (grid) {
+  if (grid) {
+    this.grid = grid;
+  } else {
+    this.grid = _makeGrid();
+  }
 }
 
 Board.DIRS = [
@@ -182,7 +186,21 @@ Board.prototype.isOver = function () {
   return !this.hasMove("black") && !this.hasMove("white");
 };
 
+Board.prototype.score = function(color) {
+  let count = 0;
+  let otherCount = 0;
 
+  for (let i=0; i < this.grid.length; i++) {
+    for (let j=0; j < this.grid.length; j++) {
+      if (this.isMine([i,j], color)) {
+        count++;
+      } else if (this.isOccupied([i,j])) {
+        otherCount++;
+      }
+    }
+  }
+  return count - otherCount;
+}
 
 
 /**
