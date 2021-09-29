@@ -208,7 +208,7 @@ Board.prototype.score = function(color) {
  */
 Board.prototype.print = function () {
 
-  console.log(" " + [0,1,2,3,4,5,6,7].join(" "));
+  console.log("  " + [0,1,2,3,4,5,6,7].join(" "));
   this.grid.forEach((row, i) => {
     let printRow = row.map(ele => {
       if (ele) {
@@ -217,7 +217,7 @@ Board.prototype.print = function () {
         return "-";
       }
     })
-    console.log(`${i}` + printRow.join(" "));
+    console.log(`${i} ` + printRow.join(" "));
   })
 };
 
