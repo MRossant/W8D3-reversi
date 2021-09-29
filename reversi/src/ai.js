@@ -1,10 +1,12 @@
-function AI(board) {
+function AI(color, board) {
+  this.color = color
   this.board = board;
 }
 
 AI.prototype.getMove = function() {
+  let validMoves = this.board.validMoves(this.color);
 
-  return [2,4];
+  return validMoves[Math.floor(Math.random()*validMoves.length)]
 }
 
 // DON'T TOUCH THIS CODE

@@ -12,8 +12,15 @@ if (typeof window === 'undefined'){
  */
 function Game () {
   this.board = new Board();
-  this.ai = new AI(this.board);
-  this.turn = "black";
+
+  if (Math.random() > 0.5) {
+    this.player = "human";
+    this.ai = new AI("white", this.board);
+  } else {
+    this.ai = new AI("black", this.board);
+    this.player = "ai";
+  }
+  this.turn = "black"
 };
 
 /**
@@ -21,6 +28,10 @@ function Game () {
  */
 Game.prototype._flipTurn = function () {
   this.turn = (this.turn == "black") ? "white" : "black";
+};
+
+Game.prototype._flipPlayer = function () {
+  this.player = (this.player == "human") ? "ai" : "human";
 };
 
 // Dreaded global state!
@@ -49,7 +60,7 @@ Game.prototype.play = function () {
 Game.prototype.playTurn = function (callback) {
   this.board.print();
 
-  if (this.turn === "black") {
+  if (this.player === "human") {
     rlInterface.question(
       `${this.turn}, where do you want to move?`,
       handleResponse.bind(this)
@@ -63,7 +74,9 @@ Game.prototype.playTurn = function (callback) {
     }
 
     this.board.placePiece(pos, this.turn);
+    console.log(`AI played ${pos}`);
     this._flipTurn();
+    this._flipPlayer();
     callback();
   }
 
@@ -77,6 +90,7 @@ Game.prototype.playTurn = function (callback) {
 
     this.board.placePiece(pos, this.turn);
     this._flipTurn();
+    this._flipPlayer();
     callback();
   }
 };
@@ -91,6 +105,7 @@ Game.prototype.runLoop = function (overCallback) {
   } else if (!this.board.hasMove(this.turn)) {
     console.log(`${this.turn} has no move!`);
     this._flipTurn();
+    this._flipPlayer();
     this.runLoop();
   } else {
     this.playTurn(this.runLoop.bind(this, overCallback));
