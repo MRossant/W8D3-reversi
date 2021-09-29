@@ -13,6 +13,7 @@ function _makeGrid () {
     { length: 8 },
     () => Array.from({ length: 8 })
   );
+
   grid[3][4] = new Piece("black");
   grid[4][3] = new Piece("black");
   grid[3][3] = new Piece("white");
@@ -145,7 +146,6 @@ Board.prototype.placePiece = function (pos, color) {
   } else {
     throw new Error("Invalid move!");
   }
-
 };
 
 /**
@@ -153,12 +153,23 @@ Board.prototype.placePiece = function (pos, color) {
  * the Board for a given color.
  */
 Board.prototype.validMoves = function (color) {
+  let validMovesArray = [];
+  for (let i = 0; i < this.grid.length; i++) {
+    for (let j = 0; j < this.grid.length; j++) {
+      if (this.validMove([i, j], color)) {
+        validMovesArray.push([i, j]);
+      }
+    }
+  }
+
+  return validMovesArray;
 };
 
 /**
  * Checks if there are any valid moves for the given color.
  */
 Board.prototype.hasMove = function (color) {
+  return this.validMoves(color).length > 0;
 };
 
 
@@ -168,6 +179,7 @@ Board.prototype.hasMove = function (color) {
  * the black player are out of moves.
  */
 Board.prototype.isOver = function () {
+  return !this.hasMove("black") && !this.hasMove("white");
 };
 
 
@@ -177,8 +189,19 @@ Board.prototype.isOver = function () {
  * Prints a string representation of the Board to the console.
  */
 Board.prototype.print = function () {
-};
 
+  console.log(" " + [0,1,2,3,4,5,6,7].join(" "));
+  this.grid.forEach((row, i) => {
+    let printRow = row.map(ele => {
+      if (ele) {
+        return ele;
+      } else {
+        return "-";
+      }
+    })
+    console.log(`${i}` + printRow.join(" "));
+  })
+};
 
 // DON'T TOUCH THIS CODE
 if (typeof window === 'undefined'){
