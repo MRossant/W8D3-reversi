@@ -116,7 +116,16 @@ Board.prototype._positionsToFlipRecurse = function(pos, color, dir, piecesToFlip
  * color being flipped.
  */
 Board.prototype.validMove = function (pos, color) {
+  if (this.isOccupied(pos)) {
+    return false;
+  }
+
+  return Board.DIRS.some(dir => {
+    let array = this._positionsToFlip(pos, color, dir)
+    return array.length > 0;
+  })
 };
+
 
 /**
  * Adds a new piece of the given color to the given position, flipping the
