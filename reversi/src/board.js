@@ -116,7 +116,7 @@ Board.prototype._positionsToFlipRecurse = function(pos, color, dir, piecesToFlip
  * color being flipped.
  */
 Board.prototype.validMove = function (pos, color) {
-  if (this.isOccupied(pos)) {
+  if (!this.isValidPos(pos) || this.isOccupied(pos)) {
     return false;
   }
 
@@ -134,6 +134,18 @@ Board.prototype.validMove = function (pos, color) {
  * Throws an error if the position represents an invalid move.
  */
 Board.prototype.placePiece = function (pos, color) {
+  if (this.validMove(pos, color)) {
+    this.grid[pos[0]][pos[1]] = new Piece(color);
+    Board.DIRS.forEach(dir => {
+      let positions = this._positionsToFlip(pos, color, dir);
+      positions.forEach(pos => {
+        this.grid[pos[0]][pos[1]].flip();
+      })
+    })
+  } else {
+    throw new Error("Invalid move!");
+  }
+
 };
 
 /**
